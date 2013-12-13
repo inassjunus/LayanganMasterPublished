@@ -154,12 +154,12 @@ public class NonAugmentedActivity extends SimpleBaseGameActivity implements
 
 	/* punya rachmad */
 	private ITextureRegion mHitArea, mCollidePoint, mTarik, mUlur, mVs1, mVs2,
-			mVs3, mFire, mWater, mShield;
+	mVs3, mFire, mWater, mShield, mInfoWin, mInfoLose, mFaceWin, mFaceLose;
 
 	final Scene scene2 = new Scene();
 
 	Sprite hitArea1, collidePoint1, hitArea2, collidePoint2, tarik, ulur, vs,
-			item1, item2, item3;
+	item1, item2, item3, info, face;
 	// private Font mFont;
 	private Text attackCountText, hpt, hpvt;
 	private int attackCount = 0;
@@ -565,6 +565,36 @@ public class NonAugmentedActivity extends SimpleBaseGameActivity implements
 						}
 					});
 
+			ITexture infoWin_asset = new BitmapTexture(this.getTextureManager(),
+					new IInputStreamOpener() {
+						@Override
+						public InputStream open() throws IOException {
+							return getAssets().open("asset/gameover-win.png");
+						}
+					});
+			ITexture infoLose_asset = new BitmapTexture(this.getTextureManager(),
+					new IInputStreamOpener() {
+						@Override
+						public InputStream open() throws IOException {
+							return getAssets().open("asset/gameover-lose.png");
+						}
+					});
+			
+			ITexture faceWin_asset = new BitmapTexture(this.getTextureManager(),
+					new IInputStreamOpener() {
+						@Override
+						public InputStream open() throws IOException {
+							return getAssets().open("asset/gameover-happy.png");
+						}
+					});
+			ITexture faceLose_asset = new BitmapTexture(this.getTextureManager(),
+					new IInputStreamOpener() {
+						@Override
+						public InputStream open() throws IOException {
+							return getAssets().open("asset/gameover-sad.png");
+						}
+					});
+
 			bg_asset.load();
 			collidepoint_asset.load();
 			tarik_asset.load();
@@ -575,6 +605,10 @@ public class NonAugmentedActivity extends SimpleBaseGameActivity implements
 			fire_asset.load();
 			water_asset.load();
 			shield_asset.load();
+			infoWin_asset.load();
+			infoLose_asset.load();
+			faceWin_asset.load();
+			faceLose_asset.load();
 
 			mHitArea = TextureRegionFactory.extractFromTexture(bg_asset);
 			mCollidePoint = TextureRegionFactory
@@ -587,6 +621,11 @@ public class NonAugmentedActivity extends SimpleBaseGameActivity implements
 			mFire = TextureRegionFactory.extractFromTexture(fire_asset);
 			mWater = TextureRegionFactory.extractFromTexture(water_asset);
 			mShield = TextureRegionFactory.extractFromTexture(shield_asset);
+			mInfoWin = TextureRegionFactory.extractFromTexture(infoWin_asset);
+			mInfoLose = TextureRegionFactory.extractFromTexture(infoLose_asset);
+			mFaceWin = TextureRegionFactory.extractFromTexture(faceWin_asset);
+			mFaceLose = TextureRegionFactory.extractFromTexture(faceLose_asset);
+
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -1929,14 +1968,31 @@ public class NonAugmentedActivity extends SimpleBaseGameActivity implements
 			gameOverText = new Text(0, 0, mGameOverFont,
 					"Permainan Berakhir! \n\n Yeay Menang !",
 					getVertexBufferObjectManager());
+			this.info = new Sprite(0, 0, mInfoWin, getVertexBufferObjectManager());
+			mInfoLose = null;
+			this.face = new Sprite(0, 0, mFaceWin, getVertexBufferObjectManager());
+			mFaceLose = null;
 		} else {
 			gameOverText = new Text(0, 0, mGameOverFont,
-					"Permainan Berakhir! \n\n Yaah Kalah :<",
+					"Permainan Berakhir! \n\n Yaah Kalah :'<",
 					getVertexBufferObjectManager());
+			this.info = new Sprite(0, 0, mInfoLose, getVertexBufferObjectManager());
+			mInfoWin = null;
+			this.face = new Sprite(0, 0, mFaceLose, getVertexBufferObjectManager());
+			mFaceWin = null;
 		}
+		
 		gameOverText.setScale(scale);
-		gameOverText.setPosition(cameraWidth / 2, cameraHeight / 2);
+		gameOverText.setPosition(gameOverText.getWidthScaled() / 2, cameraHeight / 2);
 		gameOver.attachChild(gameOverText);
+		
+		this.info.setScale(scale);
+		this.info.setPosition(cameraWidth - info.getWidthScaled() / 2, cameraHeight / 2 - info.getHeightScaled() / 2);
+		gameOver.attachChild(info);
+		
+		this.face.setScale(scale);
+		this.face.setPosition(gameOverText.getWidthScaled() + face.getWidthScaled() / 2, info.getHeightScaled() + face.getHeightScaled() / 2);
+		gameOver.attachChild(face);
 		gameOver.registerUpdateHandler(new TimerHandler(3f, true,
 				new ITimerCallback() {
 					@Override

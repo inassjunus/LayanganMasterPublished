@@ -20,7 +20,7 @@ public class Player{
 		db.open();
 		isNew = db.isNew(username); 
 		if(isNew){
-			db.insertUser(username, 0, 1, 10, 10, 10, 1000, 1, 1, 10000);
+			db.insertUser(username, 0, 1, 10, 10, 10, 1000, 1, 1, 0);
 			db.insertBengkel("purple", 0);
 			db.insertBengkel("green", 0);
 			db.insertBengkel("blue", 0);

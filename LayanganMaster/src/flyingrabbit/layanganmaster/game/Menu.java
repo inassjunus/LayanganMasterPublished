@@ -47,7 +47,7 @@ public class Menu extends SimpleBaseGameActivity {
 			mBantuan, mPiala, mBengkel, mHome, mSoundOn, mSoundOff, mCameraOn,
 			mCameraOff, m10, m15, m30, md, mCoin, mDebt1, mMaster1, mLight1,
 			mDebt2, mMaster2, mLight2, mK1, mK2, mK3, mSantaiButton,
-			mEnerjikButton, mMenu2, mInfo, mCompass;
+			mEnerjikButton, mMenu2, mInfo, mCompass, mInfoK2, mInfoK3;
 
 	int cameraWidth;
 	int cameraHeight;
@@ -67,7 +67,7 @@ public class Menu extends SimpleBaseGameActivity {
 	Sprite background, main, pengaturan, menu, piala, bantuan, bengkel, home,
 			soundOn, soundOff, cameraOn, cameraOff, harga1000, harga1500,
 			harga3000, hd, coin, debt, master, light, k1, k2, k3, santaiButton,
-			enerjikButton, menu2, home2, info, compass;
+			enerjikButton, menu2, home2, info, compass, infoK2, infoK3;
 
 	static Music music;
 	private Sound buttonClickedSound;
@@ -282,18 +282,38 @@ public class Menu extends SimpleBaseGameActivity {
 							return getAssets().open("asset/kite3.png");
 						}
 					});
+			
+			ITexture asset_info_k2 = new BitmapTexture(this.getTextureManager(),
+					new IInputStreamOpener() {
+						@Override
+						public InputStream open() throws IOException {
+							return getAssets().open("asset/infokite2.png");
+						}
+					});
+			
+			ITexture asset_info_k3 = new BitmapTexture(this.getTextureManager(),
+					new IInputStreamOpener() {
+						@Override
+						public InputStream open() throws IOException {
+							return getAssets().open("asset/infokite3.png");
+						}
+					});
 
 			menu_asset.load();
 			home_asset.load();
 			asset_k1.load();
 			asset_k2.load();
 			asset_k3.load();
+			asset_info_k2.load();
+			asset_info_k3.load();
 
 			mHome = TextureRegionFactory.extractFromTexture(home_asset);
 			mMenu = TextureRegionFactory.extractFromTexture(menu_asset);
 			mK1 = TextureRegionFactory.extractFromTexture(asset_k1);
 			mK2 = TextureRegionFactory.extractFromTexture(asset_k2);
 			mK3 = TextureRegionFactory.extractFromTexture(asset_k3);
+			mInfoK2 = TextureRegionFactory.extractFromTexture(asset_info_k2);
+			mInfoK3 = TextureRegionFactory.extractFromTexture(asset_info_k3);
 
 			ITexture menu_asset2 = new BitmapTexture(this.getTextureManager(),
 					new IInputStreamOpener() {
@@ -331,6 +351,9 @@ public class Menu extends SimpleBaseGameActivity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
+		
 		mEngine.getTextureManager().loadTexture(mBitmapTextureAtlas);
 	}
 
@@ -760,6 +783,8 @@ public class Menu extends SimpleBaseGameActivity {
 					scene6.detachChild(k1);
 					scene6.detachChild(k2);
 					scene6.detachChild(k3);
+					scene6.detachChild(infoK2);
+					scene6.detachChild(infoK3);
 					scene6.detachChild(home);
 					scene6.attachChild(menu2);
 					scene6.attachChild(enerjikButton);
@@ -795,6 +820,8 @@ public class Menu extends SimpleBaseGameActivity {
 					scene6.detachChild(k1);
 					scene6.detachChild(k2);
 					scene6.detachChild(k3);
+					scene6.detachChild(infoK2);
+					scene6.detachChild(infoK3);
 					scene6.detachChild(home);
 					scene6.attachChild(menu2);
 					scene6.attachChild(enerjikButton);
@@ -828,6 +855,8 @@ public class Menu extends SimpleBaseGameActivity {
 					scene6.detachChild(k1);
 					scene6.detachChild(k2);
 					scene6.detachChild(k3);
+					scene6.detachChild(infoK2);
+					scene6.detachChild(infoK3);
 					scene6.detachChild(home);
 					scene6.attachChild(menu2);
 					scene6.attachChild(enerjikButton);
@@ -845,14 +874,34 @@ public class Menu extends SimpleBaseGameActivity {
 		k3.setScale(player.scale);
 		k3.setPosition(cameraWidth * 0.7f, player.getCameraHeight(0.5));
 
+		
+		this.infoK2 = new Sprite(0, 0, mInfoK2, getVertexBufferObjectManager());
+		this.infoK2.setScale(player.scale);
+		this.infoK2.setPosition(cameraWidth * 0.45f, player.getCameraHeight(0.2));
+		
+		this.infoK3 = new Sprite(0, 0, mInfoK3, getVertexBufferObjectManager());
+		this.infoK3.setScale(player.scale);
+		this.infoK3.setPosition(cameraWidth * 0.7f, player.getCameraHeight(0.2));
+		
+		
 		if (player.buyGreen) {
 			scene6.attachChild(k3);
 			scene6.registerTouchArea(k3);
+			scene6.attachChild(infoK3);
+		}  else {
+			k3 = null;
+			infoK3 = null;
+			mInfoK3 = null;
 		}
 
 		if (player.buyPurple) {
 			scene6.attachChild(k2);
 			scene6.registerTouchArea(k2);
+			scene6.attachChild(infoK2);
+		} else {
+			k2 = null;
+			infoK2 = null;
+			mInfoK2 = null;
 		}
 
 		home = new Sprite(0, 0, mHome, getVertexBufferObjectManager()) {

@@ -51,12 +51,12 @@ import android.view.KeyEvent;
 public class Lari extends SimpleBaseGameActivity implements
 		SensorEventListener, ILocationListener {
 
-	private ITextureRegion mBackgroundTextureRegion, mStart, mFinish;
+	private ITextureRegion mBackgroundTextureRegion, mStart, mStartSantai, mFinish;
 	int cameraWidth;
 	int cameraHeight;
 	final Scene scene = new Scene();
 	private BitmapTextureAtlas mBitmapTextureAtlas;
-	Sprite background, finish, start;
+	Sprite background, finish, start, startSantai;
 
 	float rachmad = 0.8f;
 	private Font mFont;
@@ -76,7 +76,9 @@ public class Lari extends SimpleBaseGameActivity implements
 	private Sound buttonClickedSound;
 	private Sound beep;
 	private boolean isSoundOn = false;
-
+	
+	private boolean isSantai = false;
+	
 	int ii = 5;
 
 	@Override
@@ -89,7 +91,9 @@ public class Lari extends SimpleBaseGameActivity implements
 				ScreenOrientation.LANDSCAPE_FIXED, new RatioResolutionPolicy(
 						cameraWidth, cameraHeight), camera);
 		engineOptions.getAudioOptions().setNeedsMusic(true).setNeedsSound(true);
+		isSantai = Menu.player.isSantai;
 		this.mUserLocation = new Location(LocationManager.GPS_PROVIDER);
+		
 		return engineOptions;
 	}
 
@@ -131,14 +135,26 @@ public class Lari extends SimpleBaseGameActivity implements
 		mFont.load();
 
 		try {
-
-			ITexture start_asset = new BitmapTexture(this.getTextureManager(),
-					new IInputStreamOpener() {
-						@Override
-						public InputStream open() throws IOException {
-							return getAssets().open("asset/lari.png");
-						}
-					});
+			ITexture start_asset;
+			if(!this.isSantai) {
+				start_asset = new BitmapTexture(this.getTextureManager(),
+						new IInputStreamOpener() {
+							@Override
+							public InputStream open() throws IOException {
+								return getAssets().open("asset/lari.png");
+							}
+						});
+			} else {
+				start_asset = new BitmapTexture(this.getTextureManager(),
+						new IInputStreamOpener() {
+							@Override
+							public InputStream open() throws IOException {
+								return getAssets().open("asset/kocok.png");
+							}
+						});
+			}
+			
+			
 			ITexture finish_asset = new BitmapTexture(this.getTextureManager(),
 					new IInputStreamOpener() {
 						@Override
@@ -148,11 +164,11 @@ public class Lari extends SimpleBaseGameActivity implements
 					});
 
 			start_asset.load();
-			finish_asset.load();
+			finish_asset.load();;
 
 			mStart = TextureRegionFactory.extractFromTexture(start_asset);
 			mFinish = TextureRegionFactory.extractFromTexture(finish_asset);
-
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
